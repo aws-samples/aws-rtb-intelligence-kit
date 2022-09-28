@@ -251,19 +251,6 @@ Follow the instructions printed on the user interface
 
 After a few minutes, a new ECS task will be running. The new task will automatically load the latest model generated.
 
-## 📊 Metrics
-
-The below metrics information provide values associated with deploying and using this module.
-
-1. Metrics for the advertising ML stack
-
-Metric | Value
------- | ------
-**Deployment Time** | 15 minutes
-**Requirements** | [aws-cdk](https://docs.aws.amazon.com/cdk/latest/guide/home.html), [npm](https://www.npmjs.com/get-npm), [Docker](https://www.docker.com/get-started)
-**Audience** | Developers, Solutions Architects
-**stacks name** | `AdvertisingIntelligenceKitStack`
-**CDK Version** | 2.5.0
 
 ## 🔰 Description
 
@@ -279,7 +266,7 @@ The infrastructure can be divided in two main parts:
 
 ### SSM Parameters
 
-The `AdvertisingIntelligenceKitStack` infrastructure create parameters in  [AWS Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html). Those parameters can be used by other services.
+The `aik/filtering` infrastructure create parameters in  [AWS Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html). Those parameters can be used by other services.
 
 Parameter Variable                          | Description
 --------------------------------------------| ------------
