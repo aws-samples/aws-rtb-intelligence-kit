@@ -1,0 +1,27 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
+#
+# Build stage
+#
+FROM maven:3.8.1-jdk-11-slim AS build
+COPY src /home/app/src
+COPY pom.xml /home/app
+RUN mvn -f /home/app/pom.xml clean package
+
+#
+# Package stage
+#
+FROM amazoncorretto:11
+RUN yum update -y ; yum install -y gcc
+RUN mkdir -p /home/app
+RUN chown 8000  /home/app
+WORKDIR /home/app
+USER 8000
+COPY --from=build /home/app/target/traffic-filtering-app-1.0-SNAPSHOT-jar-with-dependencies.jar /usr/local/lib/traffic-filtering-app.jar
+RUN mkdir -p .tmp
+
+
+
+EXPOSE 8080
+ENTRYPOINT ["java","-cp","/usr/local/lib/traffic-filtering-app.jar","com.aik.prediction.InferenceServer"]
