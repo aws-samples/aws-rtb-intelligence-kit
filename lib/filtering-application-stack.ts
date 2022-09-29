@@ -41,11 +41,11 @@ export class FilteringApplicationStack extends cdk.Stack {
          */
 
         const filteringApplicationRole = new iam.Role( this, "FilteringApplicationRole", {
-                assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
-                managedPolicies: [
-                    iam.ManagedPolicy.fromAwsManagedPolicyName("CloudWatchAgentServerPolicy")
-                ]
-            }
+              assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
+              managedPolicies: [
+                  iam.ManagedPolicy.fromAwsManagedPolicyName("CloudWatchAgentServerPolicy")
+              ]
+          }
         )
 
         trainingBucket.grantRead(filteringApplicationRole)
@@ -61,11 +61,11 @@ export class FilteringApplicationStack extends cdk.Stack {
          */
 
         const monitoringConfigSSMParameter = new ssm.StringParameter(this, "MonitoringConfig", {
-                description: "The configuration for CloudWatch agent",
-                parameterName: "/aik/monitoring/config",
-                stringValue: JSON.stringify(monitoringConfig),
-                tier: ssm.ParameterTier.STANDARD,
-            }
+            description: "The configuration for CloudWatch agent",
+            parameterName: "/aik/monitoring/config",
+            stringValue: JSON.stringify(monitoringConfig),
+            tier: ssm.ParameterTier.STANDARD,
+        }
         )
         monitoringConfigSSMParameter.grantRead(filteringApplicationRole)
 
@@ -104,12 +104,12 @@ export class FilteringApplicationStack extends cdk.Stack {
          * ================================================================
          */
 
-            // Create an ECS cluster
+        // Create an ECS cluster
         const cluster = new ecs.Cluster(this, "Cluster", {
-                vpc,
-                clusterName: "advertising-server",
-                containerInsights: true
-            })
+            vpc,
+            clusterName: "advertising-server",
+            containerInsights: true
+        })
 
         const taskDefinition = new ecs.FargateTaskDefinition(this, "TaskDef", {
             family: "adserver-application",
