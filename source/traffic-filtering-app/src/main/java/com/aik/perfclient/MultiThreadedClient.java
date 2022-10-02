@@ -46,6 +46,8 @@ import java.util.stream.IntStream;
 public class MultiThreadedClient {
     private static final Logger logger = LogManager.getLogger(MultiThreadedClient.class.getName());
     private static final StatsDClient statsd = new NonBlockingStatsDClient("adserver_client", "localhost", 8125);
+    private static final Random randDeviceType = new Random();
+    private static final int maxDeviceType = 5;
 
 
     public static void main(String[] args) {
@@ -132,7 +134,7 @@ public class MultiThreadedClient {
             e.printStackTrace();
         }
 
-         logger.warn("current Thread " + Thread.currentThread().getId());
+        logger.warn("current Thread " + Thread.currentThread().getId());
 
         assert result != null;
         List<FilteringResult> dataset = result.stream().map(futureExec -> {
@@ -291,7 +293,7 @@ public class MultiThreadedClient {
                         bidRequest.payingPrice = Long.parseLong(rawObj.get("PayingPrice").toString());
                     }
                     if (rawObj.get("UserAgent") == null) {
-                        bidRequest.deviceTypeId = 5;
+                        bidRequest.deviceTypeId = 6;
                     } else {
                         bidRequest.deviceTypeId = MultiThreadedClient
                                 .getDeviceTypeId(rawObj.get("UserAgent").toString());
@@ -338,6 +340,8 @@ public class MultiThreadedClient {
     }
 
     static public int getDeviceTypeId(String userAgent) {
+
+
         Map<String, String> r = Classifier.parse(userAgent);
         String category = r.get("category");
         int deviceTypeId;
@@ -357,8 +361,11 @@ public class MultiThreadedClient {
             case "crawler":
                 deviceTypeId = 4;
                 break;
-            default:
+            case "misc":
                 deviceTypeId = 5;
+                break;
+            default:
+                deviceTypeId = randDeviceType.nextInt(maxDeviceType+1); ;
                 break;
         }
         return deviceTypeId;

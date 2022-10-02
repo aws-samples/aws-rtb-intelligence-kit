@@ -84,7 +84,7 @@ export class FilteringApplicationStack extends cdk.Stack {
                 `arn:aws:ssm:${cdk.Stack.of(this).region}:${cdk.Stack.of(this).account}:parameter/aik/pipelineModelArtifactPath`,
                 `arn:aws:ssm:${cdk.Stack.of(this).region}:${cdk.Stack.of(this).account}:parameter/aik/pipelineModelArtifactSchemaPath`,
                 `arn:aws:ssm:${cdk.Stack.of(this).region}:${cdk.Stack.of(this).account}:parameter/aik/inference_data`,
-                
+
             ]
         }))
 
@@ -246,8 +246,8 @@ export class FilteringApplicationStack extends cdk.Stack {
             dimensionsMap: {
                 metric_type: "timing"
             },
-        
-            
+
+
 
         })
 
@@ -276,7 +276,7 @@ export class FilteringApplicationStack extends cdk.Stack {
             usingMetrics: {
                 "mLatencyServerSide":serverSideLatency
             },
-            label: "Advertising server (client)",
+            label: "Filtering server (server)",
             color: cloudwatch.Color.BLUE
         })
         const totalTransaction = new cloudwatch.Metric({
