@@ -9,7 +9,7 @@
         <Root level="trace">
             <AppenderRef ref="Console" />
         </Root>
-        <Logger name="com.aik" level="info" additivity="false">
+        <Logger name="com.aik" level="WARN" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
 

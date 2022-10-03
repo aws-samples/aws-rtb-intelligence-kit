@@ -41,11 +41,11 @@ export class FilteringApplicationStack extends cdk.Stack {
          */
 
         const filteringApplicationRole = new iam.Role( this, "FilteringApplicationRole", {
-              assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
-              managedPolicies: [
-                  iam.ManagedPolicy.fromAwsManagedPolicyName("CloudWatchAgentServerPolicy")
-              ]
-          }
+                assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
+                managedPolicies: [
+                    iam.ManagedPolicy.fromAwsManagedPolicyName("CloudWatchAgentServerPolicy")
+                ]
+            }
         )
 
         trainingBucket.grantRead(filteringApplicationRole)
@@ -61,11 +61,11 @@ export class FilteringApplicationStack extends cdk.Stack {
          */
 
         const monitoringConfigSSMParameter = new ssm.StringParameter(this, "MonitoringConfig", {
-            description: "The configuration for CloudWatch agent",
-            parameterName: "/aik/monitoring/config",
-            stringValue: JSON.stringify(monitoringConfig),
-            tier: ssm.ParameterTier.STANDARD,
-        }
+                description: "The configuration for CloudWatch agent",
+                parameterName: "/aik/monitoring/config",
+                stringValue: JSON.stringify(monitoringConfig),
+                tier: ssm.ParameterTier.STANDARD,
+            }
         )
         monitoringConfigSSMParameter.grantRead(filteringApplicationRole)
 
@@ -104,12 +104,12 @@ export class FilteringApplicationStack extends cdk.Stack {
          * ================================================================
          */
 
-        // Create an ECS cluster
+            // Create an ECS cluster
         const cluster = new ecs.Cluster(this, "Cluster", {
-            vpc,
-            clusterName: "advertising-server",
-            containerInsights: true
-        })
+                vpc,
+                clusterName: "advertising-server",
+                containerInsights: true
+            })
 
         const taskDefinition = new ecs.FargateTaskDefinition(this, "TaskDef", {
             family: "adserver-application",
@@ -279,6 +279,24 @@ export class FilteringApplicationStack extends cdk.Stack {
             label: "Filtering server (server)",
             color: cloudwatch.Color.BLUE
         })
+        const totalCountOver10s = new cloudwatch.Metric({
+            metricName: "filtering_server_filtering_count",
+            namespace: "aik",
+            statistic: "sum",
+            period: cdk.Duration.seconds(10),
+            label: "Total number of bid requests over 10 seconds",
+            dimensionsMap: {
+                metric_type: "counter"
+            }
+        })
+        const throughputOver10s = new cloudwatch.MathExpression({
+            expression: "filtering_server_filtering_count_10s/10",
+            usingMetrics: {
+                "filtering_server_filtering_count_10s":totalCountOver10s
+            },
+            label: "Average throughput over 10s",
+            color: cloudwatch.Color.BLUE
+        })
         const totalTransaction = new cloudwatch.Metric({
             metricName: "filtering_server_filtering_count",
             namespace: "aik",
@@ -328,6 +346,27 @@ export class FilteringApplicationStack extends cdk.Stack {
             period: cdk.Duration.seconds(10)
         })
 
+        const throughputWidget = new cloudwatch.GraphWidget({
+
+            view: cloudwatch.GraphWidgetView.TIME_SERIES,
+
+            stacked: false,
+            liveData: true,
+            rightYAxis: {
+                showUnits: false
+            },
+            leftYAxis: {
+                showUnits: false,
+                label: "query per second",
+            },
+            title: "Filtering request per second",
+            legendPosition: cloudwatch.LegendPosition.BOTTOM,
+            right:[
+                throughputOver10s
+            ],
+            period: cdk.Duration.seconds(10)
+        })
+
         const bidRequestWidget = new cloudwatch.SingleValueWidget({
             title: "Number of bid requests submitted",
             metrics:[totalTransaction]
@@ -351,7 +390,7 @@ export class FilteringApplicationStack extends cdk.Stack {
             ],
             period: cdk.Duration.seconds(10)
         })
-        const row = new cloudwatch.Row(latencyWidget,likelihoodWidget,bidRequestWidget)
+        const row = new cloudwatch.Row(latencyWidget,throughputWidget,likelihoodWidget,bidRequestWidget)
         dashboard.addWidgets(row)
 
     }
