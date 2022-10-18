@@ -49,7 +49,7 @@ jobs:
     - name: Perform linting
       env:
         CFN_NAG_INPUT_PATH: "cdk.out/"
-        CFN_NAG_TEMPLATE_EXTENSION: "json"
+        CFN_NAG_TEMPLATE_EXTENSION: "template.json"
       run: |
         npm run build
         cfn_nag_scan --input-path "$CFN_NAG_INPUT_PATH" --template-pattern "..*\.$CFN_NAG_TEMPLATE_EXTENSION"
