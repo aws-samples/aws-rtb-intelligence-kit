@@ -28,6 +28,7 @@ jobs:
       
   cfn-nag:
     name: CFN linting
+    if: ${{ false }}  # temporarily disabled
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
