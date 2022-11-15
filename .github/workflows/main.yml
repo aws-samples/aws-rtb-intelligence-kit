@@ -1,0 +1,56 @@
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  cdk-nag:
+    name: CDK linting
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v1
+    - name: Install Node.JS
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14
+
+    - name: Install dependencies
+      run: |
+        npm install -g aws-cdk@^2.21.0
+        npm install
+        
+    - name: Perform linting
+      run: |
+        npm run build
+        npm run nag
+      
+  cfn-nag:
+    name: CFN linting
+    if: ${{ false }}  # temporarily disabled
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v1
+    - name: Install Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '2.6'
+        bundler-cache: true
+    - name: Install Node.JS
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14
+    - name: Install dependencies
+      run: |
+        gem install cfn-nag
+        npm install -g aws-cdk@^2.21.0
+        npm install
+    - name: Perform linting
+      env:
+        CFN_NAG_INPUT_PATH: "cdk.out/"
+        CFN_NAG_TEMPLATE_EXTENSION: "template.json"
+      run: |
+        npm run build
+        cfn_nag_scan --input-path "$CFN_NAG_INPUT_PATH" --template-pattern "..*\.$CFN_NAG_TEMPLATE_EXTENSION"
