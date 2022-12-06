@@ -29,7 +29,7 @@ These are prerequisites to build and deploy this application:
 
 ## Architecture
 
-The overall architecture is depicted below and consists of three mayor components:
+The overall architecture is depicted below and consists of three major components:
 
 1. ML Pipeline Component: Downloading & preparing of the data, feature engineering and training of the ML model
 2. Data Repository: Holding all the data and generated artifacts
@@ -53,7 +53,21 @@ The trained model is showcased in a traffic filetering use case where a bidding 
 
 ### Install
 
-In order to install this module dependencies, use the following command.
+First, clone this repository into your development environment.  We recommend AWS Cloud9 as a development environment, which contains all the dependencies listed above.
+
+To clone the repository
+
+```bash
+git clone https://github.com/aws-samples/aws-rtb-intelligence-kit
+```
+
+Then, in your terminal, navigate to the root of the cloned directory
+
+```bash
+cd aws-rtb-intelligence-kit
+```
+
+In order to install this module's dependencies, use the following command.
 
 ```bash
 npm install
@@ -61,7 +75,7 @@ npm install
 
 ### Build
 
-In order to build the CDK modules part of this repository and compile the Typescript code, use the below command.
+In order to build the CDK modules part of this repository and compile the Typescript code, use the following command.
 
 ```bash
 npm run build
