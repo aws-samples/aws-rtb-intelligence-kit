@@ -18,8 +18,7 @@
     "@types/node": "^14.18.26",
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
-    "aws-cdk": "^2.39.0",
-    "aws-cdk-lib": "^2.39.0",
+    "aws-cdk": "2.50.0",
     "aws-sdk": "^2.1204.0",
     "cdk-nag": "^2.16.6",
     "constructs": "^10.1.90",
@@ -30,7 +29,7 @@
   },
   "dependencies": {
     "amazon-s3-uri": "^0.1.1",
-    "aws-cdk-lib": "^2.39.0",
+    "aws-cdk-lib": "2.50.0",
     "constructs": "^10.0.0",
     "fs-extra": "^10.0.0",
     "prettier": "^2.7.1",
