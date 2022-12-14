@@ -27,17 +27,6 @@ export function createSagemakerExecutionRole(construct:Construct,
     smExecRole.addToPolicy(new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: [
-            "codecommit:GitPull",
-            "codecommit:GitPush",
-        ],
-        resources: [
-            cdk.Fn.sub("arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:notebooks")
-        ]
-    }))
-
-    smExecRole.addToPolicy(new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
             "ssm:PutParameter",
             "ssm:GetParameters",
             "ssm:GetParameter",
