@@ -98,6 +98,13 @@ export class EmrStack extends sc.ProductStack {
                 default: "emr-6.4.0",
                 allowedValues: ["emr-6.4.0"]
             },
+            {
+                name: "AutoTerminationIdleTimout",
+                type: "String",
+                description: "Specifies the amount of idle time in seconds after which the cluster automatically terminates. You can specify a minimum of 60 seconds and a maximum of 604800 seconds (seven days).",
+                default: "3600",
+                allowedPattern: ["(6[0-9]|[7-9][0-9]|[1-9][0-9]{2,4}|[1-5][0-9]{5}|60[0-3][0-9]{3}|604[0-7][0-9]{2}|604800)"] 
+            }
         ]
 
         const emrSecurityConfigurationName  = Fn.importValue(props.emrSecurityConfigurationNameExportName)
@@ -274,6 +281,9 @@ export class EmrStack extends sc.ProductStack {
             releaseLabel: cfnParamMap.get("EmrReleaseVersion")?.valueAsString || "",
             visibleToAllUsers: true,
             securityConfiguration: emrSecurityConfigurationName,
+            autoTerminationPolicy: {
+                idleTimeout: Number(cfnParamMap.get("AutoTerminationIdleTimout")?.valueAsString) || 3600,
+            },
             steps: [
                 {
                     actionOnFailure: "CONTINUE",
