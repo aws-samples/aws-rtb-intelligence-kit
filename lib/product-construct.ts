@@ -3,7 +3,6 @@ import * as cdk from "aws-cdk-lib"
 import * as sc from "@aws-cdk/aws-servicecatalog-alpha"
 import { EmrStack, EmrStackProps } from "./emr-product-stack"
 import * as ec2 from "aws-cdk-lib/aws-ec2"
-import * as codecommit from "aws-cdk-lib/aws-codecommit"
 import * as s3 from "aws-cdk-lib/aws-s3"
 import * as sagemaker from "aws-cdk-lib/aws-sagemaker"
 import { addIngress } from "./add-ingress"
@@ -24,8 +23,6 @@ import * as kms from "aws-cdk-lib/aws-kms"
 
 /**
  * This construct creates a VPC, a SageMaker domain, and a Service Catalog product.
- *
- * It also creates and populates a CodeCommit repository that holds the notebooks.
  *
  * The service catalog product template is created in `emr-product-stack.ts`.
  */
@@ -51,19 +48,6 @@ export class ProductConstruct extends Construct {
         NagSuppressions.addResourceSuppressions(this.vpc, [
             {id: "AwsSolutions-EC23", reason: "cdk-nag can't read Fn::GetAtt"}
         ], true)
-
-        // Create the CodeCommit repository and commit the notebooks
-        const repo = new codecommit.Repository(this, "notebooks", {
-            repositoryName: "notebooks",
-            code: codecommit.Code
-              .fromDirectory("source/notebooks/", "main"),
-        })
-
-        // Output the repo clone URL
-        new cdk.CfnOutput(this, "codecommit-url", {
-            value: repo.repositoryCloneUrlHttp,
-            description: "The http clone URL for the repo that holds the notebooks"
-        })
 
         // Create a bucket to hold access logs for the other buckets
         const logBucket = new s3.Bucket(this, "access-logs", {
@@ -107,7 +91,7 @@ export class ProductConstruct extends Construct {
             self.vpc.addInterfaceEndpoint("ep-" + s.split(".").join("-"), {
                 privateDnsEnabled: true,
                 service: new ec2.InterfaceVpcEndpointService(
-                  cdk.Fn.sub("com.amazonaws.${AWS::Region}." + s))
+                    cdk.Fn.sub("com.amazonaws.${AWS::Region}." + s))
             })
         }
 
@@ -118,7 +102,6 @@ export class ProductConstruct extends Construct {
         addEndpoint("logs")
         addEndpoint("ecr.dkr")
         addEndpoint("ecr.api")
-        addEndpoint("git-codecommit")
 
         const ec2SubnetIdExportName = "subnet-id"
         const ec2VpcIdExportName = "vpc-id"

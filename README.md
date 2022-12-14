@@ -103,9 +103,6 @@ Running this command deploys:
 
 * an Amazon SageMaker Studio Domain, with a user which you will be using later to run data processing and ML trainings
 * a Service Catalog Product which allows you to instantiate an EMR cluster from the SageMaker Studio workbench. You will be using the EMR cluster to run the actual data processing of the raw data
-* a AWS CodeCommit repository which holds the Jupyter Notebooks which you are using from SageMaker Studio
-
-The command will print stack's output. Copy the output with string `sagemakeremrproductcodecommiturl`. You will need this value to fetch notebook files in the next section.
 
 After those steps we are ready to use the kit.
 
@@ -141,15 +138,15 @@ The creation of the cluster takes some time, but **we can proceed with the next 
 
 > Note that you can terminate the cluster from the same userinterface and recreate the cluster at any point in time. This helps you to control the cost of running the kit.
 
-### Clone the notebook repo
+### Clone the GitHub repo
 
-As a last preperation step, we clone the Jupyter Notebooks for running the Data Processing and ML model training. Click on the **Git icon** on the left hand side. Then select **Clone a Repository** button.
+As a last preparation step, we clone the GitHub repo to obtain the Notebooks for running the Data Processing and ML model training. Click on the **Git icon** on the left hand side. Then select **Clone a Repository** button.
 
-You can find the clone url of the CodeCommit Repository at the output tab of the CloudFormation Stack within the CloudFormation console. It is emitted as `sagemakeremrproductcodecommiturl`.
+Use the clone url of this GitHub repository: <https://github.com/aws-samples/aws-rtb-intelligence-kit.git>.
 
 ![clone](assets/clone.png)
 
-As a result, you will have a local copy of the notebooks in your SageMaker Studio Envrionment, which we will use in the following steps. In particular we have the following notebooks:
+As a result, you will have a local copy of the GitHub repository in your SageMaker Studio Environment. Open the `aws-rtb-intelligence-kit/source/notebooks` directory on the File Browser tab in SageMaker Studio to find the notebook files. We will use these notebooks in the following steps. In particular we have the following notebooks:
 
 * `0_store_configuration.ipynb`
 * `1_download_ipinyou_data_tos3.ipynb`
@@ -158,7 +155,7 @@ As a result, you will have a local copy of the notebooks in your SageMaker Studi
 
 ### Run the data processing Pipeline
 
-In the following we run through the individual steps of the pipeline. Each of the steps is provided as a notebook which are extensively documented. Therefore we are only providing the highlights here.
+In the following we run through the individual steps of the pipeline. Each of the steps is provided as a notebook which are extensively documented. Therefore we are only providing the highlights here. You can find the notebook files in the `aws-rtb-intelligence-kit/source/notebooks` directory.
 
 In general the notebooks are desigend to be run with `Python 3 (Data Science)`  kernel. The exception of this rule is `2_OpenRTB_EMR.ipynb` which is utilizing a `PySpark (SparkMagic)` kernel. Detailed instruction on how to change the kernel for a SageMaker Notebook can be found in the [Amazon SageMaker Developer Guide](https://docs.aws.amazon.com/sagemaker/latest/dg/notebooks-create-open.html#notebooks-open)
 
