@@ -22,7 +22,7 @@ export class AIKStage extends cdk.Stage {
         // Create the SageMaker studio domain and the Service Catalog product
         // that allows analysts to create EMR clusters from their studio instance.
         const sagemakerEmr = new SagemakerEmrStack(this, "sagemaker-emr", {
-            description: "Advertising Intelligence Kit - SageMaker and EMR stack (uksb-1tf424ncp)"
+            description: "(SO9127) Advertising Intelligence Kit - SageMaker and EMR stack (uksb-1tf424ncp)"
         })
 
         new FilteringApplicationStack(this, "filtering", {
