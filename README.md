@@ -2,20 +2,20 @@
 
 ### What is this repository about?
 
-Many customers in the programmatic advertising - or adtech - industry have huge data volumes and requirements for low latency inference models.  While the heart of a machine learning pipeline - training models and tracking performance - has become easier with services like Amazon SageMaker Studio in the last few years, data scientists still find challenges with ingesting and transforming ever-growing big data (>TB) as well as creating very low latency (<10ms) models.  The RTB Intelligent Kit is a framework with familiar use cases to address these challenges.  
+Many customers in the programmatic advertising - or adtech - industry have huge data volumes and requirements for low latency inference models. While the heart of a machine learning pipeline - training models and tracking performance - has become easier with services like Amazon SageMaker Studio in the last few years, data scientists still find challenges with ingesting and transforming ever-growing big data (>TB) as well as creating very low latency (<10ms) models. The RTB Intelligent Kit is a framework with familiar use cases to address these challenges.
 
-With one CDK application, a data scientist can deploy an end-to-end pipeline with pre-configured use cases, and can adapt the kit to their particular needs.  The kit includes:
+With one CDK application, a data scientist can deploy an end-to-end pipeline with pre-configured use cases, and can adapt the Kit to their particular needs. The Kit includes:
 
 * sample public data in OpenRTB format
 * a data transformation pipeline using EMR
 * an ML environment including SageMaker Studio
-* a deployment of containerised inference models for integration into customer platforms at low latency
+* a deployment of containerized inference models for integration into customer platforms at low latency
 
-The pre-configured use case at launch is bid filtering - predicting the likelihood of a bidder to make a bid on a given bid request. The pipeline is easily adaptable to other use cases common in the industry. By launching the kit as an open source project, users can contribute back their own adaptations and implementations in this growing industry.
+The pre-configured use case at launch is bid filtering - predicting the likelihood of a bidder to make a bid on a given bid request. The pipeline is easily adaptable to other use cases common in the industry. By launching the Kit as an open source project, users can contribute back their own adaptations and implementations in this growing industry.
 
 ## Support
 
-If you notice a defect, have questions, or need support with deployment. Please create an issue in this repository.
+If you notice a defect, have questions, or need support with deployment, please create an issue in this repository.
 
 ## Prerequisites
 
@@ -23,9 +23,9 @@ These are prerequisites to build and deploy this application:
 
 * [Node.js](https://nodejs.org/en/) with version higher than 10.13.0 (Please note that version between 13.0.0 and 13.6.0 are not compatible too)
 * [CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html#getting_started_prerequisites) with version higher than 2.5.0
-* [docker](https://docs.docker.com/get-docker/) version 20
-* No Amazon SageMaker Domain in your account as the kit installs a new domain. You can only have one domain per account and region.
-* [kaggle](https://www.kaggle.com/) a kaggle account to download the example data set into the kit
+* [Docker](https://docs.docker.com/get-docker/) version 20
+* No Amazon SageMaker Domain in your Account as the Kit installs a new domain. You can only have one domain per account and region.
+* [kaggle](https://www.kaggle.com/) a Kaggle account to download the example data set into the Kit
 
 ## Architecture
 
@@ -35,17 +35,17 @@ The overall architecture is depicted below and consists of three major component
 2. Data Repository: Holding all the data and generated artifacts
 3. Filtering Server Component: Showcasing the usage of an ML Model for traffic filtering.
 
-![High Level View](assets/aik-high-level-view-HLD.drawio.png)
+![High Level View](assets/aik-high-level-view-HLD.png)
 
 ### ML - Data Pipeline
 
-The Data and ML training pipeline is implemented as a series of Amazon SageMaker Studio Notebooks, which should be run in sequence to execute all the pipeline steps. For processing of big volumes of bidding and impression data it is utilizing an EMR cluster, which is instaniciated from Amazon SageMaker Studio.
+The Data and ML training pipeline is implemented as a series of Amazon SageMaker Studio Notebooks, which should be run in sequence to execute all the pipeline steps. For processing of big volumes of bidding and impression data it is utilizing an EMR cluster, which is instantiated from Amazon SageMaker Studio.
 
-![ML-Data-Pipeline](assets/aik-high-level-view-ML-Data-Pipeline.drawio.png)
+![ML-Data-Pipeline](assets/aik-high-level-view-ML-Data-Pipeline.png)
 
 ### Filtering Server Component
 
-The trained model is showcased in a traffic filetering use case where a bidding server is using the model inference to make bid / no-bid decisions based on the models prediction. All involved components are deplyoed as individual container in an Amazon ECS cluster.
+The trained model is showcased in a traffic filtering use case where a bidding server is using the model inference to make bid / no-bid decisions based on the models prediction. All involved components are deployed as individual container in an Amazon ECS cluster.
 
 ![Bidding Application](assets/traffic-filtering-server-view.png)
 
@@ -53,7 +53,7 @@ The trained model is showcased in a traffic filetering use case where a bidding 
 
 ### Install
 
-First, clone this repository into your development environment.  We recommend AWS Cloud9 as a development environment, which contains all the dependencies listed above.
+First, clone this repository into your development environment. We recommend AWS Cloud9 as a development environment, which contains all required dependencies listed above.
 
 To clone the repository
 
@@ -81,22 +81,22 @@ In order to build the CDK modules part of this repository and compile the Typesc
 npm run build
 ```
 
-### Deploy the RTB intelligence kit
+### Deploy the RTB Intelligence Kit
 
 For a standalone deployment, run the following commands.
 
 > Note that you will need the AWS CDK installed.
 
-First of all you need to bootstrap your CDK to be able to deploy the kit into your account.
+First of all you need to bootstrap your CDK to be able to deploy the Kit into your Account.
 
 ```bash
 cdk bootstrap
 ```
 
-Then we deploy the components of the kit, which are used to run the data processing and the ML model training, with the following command:
+Then we deploy the components of the Kit, which are used to run the data processing and the ML model training, with the following command:
 
 ```bash
-cdk deploy "aik/sagemaker-emr"
+cdk deploy "aik/sagemaker-emr" --require-approval never
 ```
 
 Running this command deploys:
@@ -104,7 +104,7 @@ Running this command deploys:
 * an Amazon SageMaker Studio Domain, with a user which you will be using later to run data processing and ML trainings
 * a Service Catalog Product which allows you to instantiate an EMR cluster from the SageMaker Studio workbench. You will be using the EMR cluster to run the actual data processing of the raw data
 
-After those steps we are ready to use the kit.
+After those steps we are ready to use the Kit.
 
 ## Run the solution
 
@@ -118,9 +118,9 @@ You will find the SageMaker Domain with the prepared user. Go ahead an open Sage
 
 Now we can go and create the EMR Cluster which we will be using for data processing.
 
-> :warning: Note that the running EMR Cluster is charged regardless if it is actual in use. So make sure to tear it down if it is not necessary anymore.
+> :warning: Note that the running EMR Cluster is charged regardless of whether it is actually in use. So make sure to terminate it if it is not necessary anymore.
 
-The creation of the cluster can be done from the comfort of SageMaker Studio. Open the **SageMaker Cluster** resource as depicated in the screenshot below. (The last orange icon on the left pane)
+The cluster can easily be created from within SageMaker Studio. Open SageMaker resources by clicking on the orange triangle icon on the left pane. Then click on Projects, select Clusters in the dropdown menu. Click on Create cluster. It will open another tab.
 
 ![project-cluster](assets/project-cluster.png)
 
@@ -136,7 +136,7 @@ Enter any value for `EmrClusterName`. Leave other fields with default values.
 
 The creation of the cluster takes some time, but **we can proceed with the next steps while waiting**.
 
-> Note that you can terminate the cluster from the same userinterface and recreate the cluster at any point in time. This helps you to control the cost of running the kit.
+> Note that you can terminate the cluster from the same user interface and recreate the cluster at any point in time. This helps you to control the cost of running the Kit.
 
 ### Clone the GitHub repo
 
@@ -157,7 +157,7 @@ As a result, you will have a local copy of the GitHub repository in your SageMak
 
 In the following we run through the individual steps of the pipeline. Each of the steps is provided as a notebook which are extensively documented. Therefore we are only providing the highlights here. You can find the notebook files in the `aws-rtb-intelligence-kit/source/notebooks` directory.
 
-In general the notebooks are desigend to be run with `Python 3 (Data Science)`  kernel. The exception of this rule is `2_OpenRTB_EMR.ipynb` which is utilizing a `PySpark (SparkMagic)` kernel. Detailed instruction on how to change the kernel for a SageMaker Notebook can be found in the [Amazon SageMaker Developer Guide](https://docs.aws.amazon.com/sagemaker/latest/dg/notebooks-create-open.html#notebooks-open)
+In general the notebooks are desigend to be run with `Python 3 (Data Science)` kernel. The exception of this rule is `2_OpenRTB_EMR.ipynb` which is utilizing a `PySpark (SparkMagic)` kernel. Detailed instruction on how to change the kernel for a SageMaker Notebook can be found in the [Amazon SageMaker Developer Guide](https://docs.aws.amazon.com/sagemaker/latest/dg/notebooks-create-open.html#notebooks-open)
 
 #### Setting up the environment
 
@@ -165,24 +165,25 @@ As a firsts step we are setting up the environment with the `0_store_configurati
 
 #### Downloading the raw data
 
-In order to bootstrap our project, we are using a dataset which is available on the Kaggle Website. `1_download_ipinyou_data_tos3.ipynb` takes you through the required steps to download the data into the prepared S3 bucket. For this purpose you need a Kaggle Account which can be created on their website. The intention is to get the solution end to end working with this example dataset prior to introducing your own data  which will require some adoptions depending on the details of the data format you are using.
+In order to bootstrap our project, we are using a dataset which is available on the Kaggle website. `1_download_ipinyou_data_tos3.ipynb` takes you through the required steps to download the data into the prepared S3 bucket. For this purpose you need a Kaggle Account which can be created on their website. The intention is to get the solution end to end working with this example dataset prior to introducing your own data which will require some adoptions depending on the details of the data format you are using.
 
 #### Preprocessing the data and feature engineering
 
-The preprocessing and feature engineering steps will be involving large amounts of data - especially in real life scenarios. In order to be able to process the data, we will be running it on the Amazon EMR Cluster which we have been creating already in an earlier step. The notebook ``is running witin a PySpark(SparkMagic) kernel an will be connected to the EMR cluster.
+The preprocessing and feature engineering steps will be involving large amounts of data - especially in real life scenarios. In order to be able to process the data, we will be running it on the Amazon EMR Cluster which we have been creating already in an earlier step. The notebook runs within a PySpark (SparkMagic) kernel and will be connected to the EMR cluster.
 
-The screenshots below are showing how you can connect your notebook to the cluster. First click on cluster.
+The screenshots below are showing how you can connect your notebook to the EMR cluster. First click on cluster.
 
 ![connect-cluster](assets/connect-cluster.png)
 
-The next step is selecting the cluster from the list of available clusters.
+The next step is selecting the EMR cluster from the list of available clusters.
 
 ![select-cluster](assets/select-cluster.png)
 
-Now we can select the `no credentials` option.
+Now we can select the **No credentials** option and continue with **Connect** as outlined in the screenshot below.
+
 ![choose-credential-cluster](assets/choose-credential-cluster.png)
 
-We are setup and can run the pipeline
+We are setup and can run the data processing pipeline.
 
 The actual pipeline is all contained in `2_OpenRTB_EMR.ipynb` and documented inline the notebook.
 
@@ -194,74 +195,79 @@ At the end of this notebook we will save our XGBoost binary model in S3, which i
 
 ### Run the inference
 
-The next step is to deploy the inference part of the kit.
+The next step is to deploy the inference part of the Kit.
 
 ```bash
-cdk deploy "aik/filtering"
+cdk deploy "aik/filtering" --require-approval never
 ```
 
-As you can see in the [architecture diagram](./assets/traffic-filtering-server-view.png), the inference is composed of one ECS cluster and one tasks and a CloudWatch dashboard.
+As you can see in the architecture diagram below, the inference is composed of one ECS cluster and one tasks and a CloudWatch dashboard.
 
-#### Overview  of deployed tasks in ECS
+![architecture diagram](./assets/traffic-filtering-server-view.png)
 
-Once the CDK stacked is deployed, you can visit the [ECS console](https://console.aws.amazon.com/ecs). You see the cluster created as  described below
+#### Overview of deployed tasks in ECS
+
+Once the CDK stacked is deployed, you can visit the [ECS console](https://console.aws.amazon.com/ecs). You see the cluster created as described below
 ![cluster-global](./assets/ecs-global.png)
-
 
 Once you have clicked on the `advertising-server` cluster, you should have a similar view:
 ![cluster-service](./assets/ecs-service.png)
 
-
 Now, if you select the `tasks` tab, you can see the ECS task managed by the service
 ![cluster-inside](./assets/ecs-inside.png)
-
 
 The task should be in a `running` status. If you clicked on the task id, you would see the detail of your task.
 ![ecs-task](./assets/ecs-tasks.png)
 
-As you can see in image, the ECS task is composed of three containers. The first container is named the `filtering-server`. The role of this service is to listen for bid request and generate a likelihood based on three artefacts generated at the [previous step](#run-the-data-processing-pipeline):
+As you can see in image, the ECS task is composed of three containers. The first container is named the `filtering-server`. The role of this service is to listen for bid request and generate a likelihood based on three artifacts generated at the [previous step](#run-the-data-processing-pipeline):
 
 1. An XGBoost model written in binary format. The model is stored on S3 bucket. The URI is passed to the filtering through an SSM parameter `/aik/xgboost/path`.
-2. An pipeline model packaged as a [MLeap bundle](https://combust.github.io/mleap-docs/). The package is stored on an S3 bucket. The URI is passed to the filtering server through an SSM parameter `/aik/pipelineModelArtifactPath`.
-3. An Schema in JSON format representing the format of the input data  of the pipeline. The JSON file is stored on an S3 bucket. The URI is passed to the filtering server through an SSM parameter `/aik/pipelineModelArtifactSchemaPath`. 
+2. A pipeline model packaged as a [MLeap bundle](https://combust.github.io/mleap-docs/). The package is stored on an S3 bucket. The URI is passed to the filtering server through an SSM parameter `/aik/pipelineModelArtifactPath`.
+3. An Schema in JSON format representing the format of the input data of the pipeline. The JSON file is stored on an S3 bucket. The URI is passed to the filtering server through an SSM parameter `/aik/pipelineModelArtifactSchemaPath`.
 
-The second container is named the `advertising-server`. Its role is to emulate an ad server, to send bid request  and then to receive a likelihood. This container generates 500000 bid requests from set of bid requests generated at [previous step](#run-the-data-processing-pipeline). The requests are stored as [JSON lines](https://jsonlines.org/examples/) in a file. The file is stored on an S3 bucket. The URI is passed to the filtering server through an SSM parameter `/aik/inference_data`. The last container run the CloudWatch agent. Its role is  to receive any metrics produce by one of the two first containers and send them to a [CloudWatch dashboard](https://console.aws.amazon.com/cloudwatch/#dashboards:name=Monitoring-Dashboard).
+The second container is named the `advertising-server`. Its role is to emulate an ad server, to send bid request and then to receive a likelihood. This container generates 500000 bid requests from set of bid requests generated at [previous step](#run-the-data-processing-pipeline). The requests are stored as [JSON lines](https://jsonlines.org/examples/) in a file. The file is stored on an S3 bucket. The URI is passed to the filtering server through an SSM parameter `/aik/inference_data`. The last container run the CloudWatch agent. Its role is to receive any metrics produce by one of the two first containers and send them to a [CloudWatch dashboard](https://console.aws.amazon.com/cloudwatch/#dashboards:name=Monitoring-Dashboard).
 
 #### Introduction to the CloudWatch dashboard
 
 ![dashboard](assets/dashboard.png)
 The description starts from left to right.
 
-The first widget displays latency (the 99th percentile over the last 10 seconds) of the likelihood computation. There are two latency:
+The first widget displays the latency (the 99th percentile over the last 10 seconds) of the likelihood computation. There are two latencies:
 
 1. The latency from the filtering client. This metrics is important because it is directly related to the latency experienced by an ad server.
-2. The latency from the filtering server. It indicate only time used in computation (and inference).
+2. The second metric represents the latency from the filtering server. This metric is important because it shows that most of the time is spent in computation only.
 
-The second widget represents the likelihood to bid (average over the last 10 seconds). Users can monitor the quality of the likelihood computed.
+The second widget represents the per second throughput of filtering request. The throughput is an average computed over a period of ten second.
 
-The third widget represents the number of bid request processed during the last 5 minutes.
+The third widget represents the likelihood to bid (average over the last 10 seconds). This metric is important because is allows the user to monitor the quality of the likelihood computed.
+
+The fourth widget represents the number of bid request processed during the last 5 minutes.
 
 ## How to load a new trained Model for inference
 
 Loading a new model is as simple as restarting a new ECS task.
 
-Please go the [ECS console](https://console.aws.amazon.com/ecs)
+Please go the [ECS console](https://console.aws.amazon.com/ecs):
 
 ![cluster-global-redeploy](./assets/ecs-global.png)
 
-Please click on `advertising-server` to view  cluster details:
+Please click on `advertising-server` to view cluster details:
+
 ![cluster-service-redeploy](./assets/ecs-service.png)
 
-Please click on the `tasks` tab to view the running tasks
+Please click on the `tasks` tab to view the running tasks:
+
 ![cluster-task](./assets/ecs-inside.png)
 
-Select the running task and click on the `Stop` button
+Select the running task and click on the `Stop` button:
+
 ![cluster-task-selected](./assets/ecs-tasks-selected.png)
 
-Follow the instructions printed on the user interface
+You will be warned that the task might be configured to automatically restart. Actually this is the case. The task will be restarting with the new configuration and updated model.
+
+Follow the instructions printed on the user interface.
 
 After a few minutes, a new ECS task will be running. The new task will automatically load the latest model generated.
-
 
 ## 🔰 Description
 
@@ -269,7 +275,7 @@ After a few minutes, a new ECS task will be running. The new task will automatic
 
 The infrastructure can be divided in two main parts:
 
-* Sagemaker construct managing the Sagemaker domain,  VPC, subnet, roles, and security groups.
+* Sagemaker construct managing the Sagemaker domain, VPC, subnet, roles, and security groups.
 * A service catalog product stack that allows Sagemaker users to provision an EMR cluster
 * A cluster running a bidding application (emulation of an ad server) and a sidecar for filtering the bid request.
 
@@ -277,7 +283,7 @@ The infrastructure can be divided in two main parts:
 
 ### SSM Parameters
 
-The `aik/filtering` infrastructure create parameters in  [AWS Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html). Those parameters can be used by other services.
+The `aik/filtering` infrastructure create parameters in [AWS Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html). Those parameters can be used by other services.
 
 Parameter Variable                          | Description
 --------------------------------------------| ------------
@@ -289,14 +295,14 @@ Once the stack is deployed and the filtering application running, cloud watch me
 
 Namespace| Dimension(Key)| Dimension(Value) | metric name  | Description
 ---------|---------------|------------------|--------------|-------------
-aik      | metric_type   | gauge            | adserver_client_likelihood_to_bid   | likelihood  to bid  
-aik      | metric_type   | timing           | adserver_client_adserver_latency_ms | observed latency on client side for getting the likelihood to bid 
+aik      | metric_type   | gauge            | adserver_client_likelihood_to_bid   | likelihood to bid
+aik      | metric_type   | timing           | adserver_client_adserver_latency_ms | observed latency on client side for getting the likelihood to bid
 aik      | metric_type   | timing           | filtering_server_filtering_latency  | observed latency on server side for getting  the likelihood to bid
 aik      | metric_type   | counter          |filtering_server_filtering_count     | number of bid requests submitted
 
 ### Cleanup
 
-Follow these instructions to remove the kit from your account.
+Follow these instructions to remove the Kit from your Account.
 
 1. Delete EMR clusters created by SageMaker user
     1. Terminate any cluster you have created as outlined in [Amazon SageMaker Developer Guide](https://docs.aws.amazon.com/sagemaker/latest/dg/configure-service-catalog-templates-studio-walkthrough.html).
