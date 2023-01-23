@@ -50,7 +50,7 @@ The trained model is showcased in a traffic filtering use case where a bidding s
 ![Bidding Application](assets/traffic-filtering-server-view.png)
 
 ## Deployment
-
+Please follow the steps below or run the dedicated [workshop](https://catalog.us-east-1.prod.workshops.aws/workshops/4eba7957-dfde-44d3-9997-127c7e4bc416/en-US).
 ### Install
 
 First, clone this repository into your development environment. We recommend AWS Cloud9 as a development environment, which contains all required dependencies listed above.
