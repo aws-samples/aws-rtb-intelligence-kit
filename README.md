@@ -88,7 +88,7 @@ After deploying the Kit, continue to [Run the solution](#run-the-solution). If y
     ```bash
     aws cloudformation create-stack --template-url **TODO: URL HERE** \
      --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit \
-     --capabilities CAPABILITY_IAM --stack-name RTB-Kit-Part1 
+     --capabilities CAPABILITY_IAM --stack-name RTB-Kit-Part1
     ```
 
     * Inference part:
@@ -362,9 +362,18 @@ Follow these instructions to remove the Kit from your Account.
     3. Delete the SageMaker Studio Domain
     4. Delete the Elastic File System created by SageMaker
 3. Delete parameters from Parameter store
-4. Run the following commands:
+4. If you deployed the Kit from your local environment, run the following commands:
 
-```sh
-cdk destroy "aik/filtering"
-cdk destroy "aik/sagemaker-emr"
-```
+    ```sh
+    cdk destroy "aik/filtering"
+    cdk destroy "aik/sagemaker-emr"
+    ```
+
+5. If you deployed the Kit using the Cloud-powered approach, delete the CloudFormation stacks created.
+    * Delete the stacks using AWS Management Console
+    * Alternatively, use AWS CLI:
+
+    ```sh
+    aws cloud-formation delete-stack --stack-name RTB-Kit-Part1
+    aws cloud-formation delete-stack --stack-name RTB-Kit-Part2
+    ```
