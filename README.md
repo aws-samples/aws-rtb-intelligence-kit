@@ -19,13 +19,18 @@ If you notice a defect, have questions, or need support with deployment, please 
 
 ## Prerequisites
 
-These are prerequisites to build and deploy this application:
+* No Amazon SageMaker Domain in your Account as the Kit installs a new domain. You can only have one domain per account and region.
+* [kaggle](https://www.kaggle.com/) a Kaggle account to download the example data set into the Kit
+
+If you want to build this solution on your local environment, you will need to install these prerequisites:
 
 * [Node.js](https://nodejs.org/en/) with version higher than 10.13.0 (Please note that version between 13.0.0 and 13.6.0 are not compatible too)
 * [CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html#getting_started_prerequisites) with version higher than 2.5.0
 * [Docker](https://docs.docker.com/get-docker/) version 20
-* No Amazon SageMaker Domain in your Account as the Kit installs a new domain. You can only have one domain per account and region.
-* [kaggle](https://www.kaggle.com/) a Kaggle account to download the example data set into the Kit
+
+Alternatively, you can build this solution in the AWS Cloud. For that, you will only need:
+
+* an AWS Account with a granted permission to deploy CloudFormation stacks.
 
 ## Architecture
 
@@ -50,6 +55,51 @@ The trained model is showcased in a traffic filtering use case where a bidding s
 ![Bidding Application](assets/traffic-filtering-server-view.png)
 
 ## Deployment
+
+### Cloud-powered deployment
+
+You can deploy this Kit into your Account leveraging such services as AWS CloudFormation and AWS CodeBuild without needing to install the dependencies locally.
+Please note that additional charges will apply, as this approach involves [bootstrapping a separate CDK environment](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html), running a [CodeBuild build](https://aws.amazon.com/codebuild/pricing/), and executing multiple AWS Lambda functions.
+
+This Kit consists of two CDK stacks. You will deploy both in the same way, just providing different stack URLs. After deploying the first part, continue with running the Kit. When you will need to deploy the **inference part** of the Kit, refer back to this deployment guide again.
+
+#### Using AWS Management Console
+
+1. Navigate to the CloudFormation console.
+2. Choose **Create stack** - **Template is ready** - **Amazon S3 URL**.
+3. Enter the *Amazon S3 Url* of the stack you want to deploy:
+    * ML part: **TODO: URL HERE**
+    * Inference part: **TODO: URL HERE**
+4. Click **Next**.
+5. Enter the *Stack name*, for example, **RTB-Kit-Part1** or **RTB-Kit-Part2**. Keep the parameter **CDKQUALIFIER** with its default value.
+6. Clock **Next**.
+7. Add tags if desired and click **Next**.
+8. Scroll down to the bottom, check **I acknowledge that AWS CloudFormation might create IAM resources** and click **Submit**.
+9. Wait until the stack is successfully deployed. There will be several additional stacks created.
+
+After deploying the Kit, continue to [Run the solution](#run-the-solution). If you decided to build the Kit locally, continue with [Install](#install) instead.
+
+#### Using AWS CLI
+
+1. Make sure your AWS CLI credentials are configured for your AWS Account and the target region.
+2. Run the following command, changing the `--stack-name` argument if desired:
+    * ML part:
+
+    ```bash
+    aws cloudformation create-stack --template-url **TODO: URL HERE** \
+     --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit \
+     --capabilities CAPABILITY_IAM --stack-name RTB-Kit-Part1 
+    ```
+
+    * Inference part:
+
+    ```bash
+    aws cloudformation create-stack --template-url **TODO: URL HERE** \
+     --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit \
+     --capabilities CAPABILITY_IAM --stack-name RTB-Kit-Part2
+    ```
+
+After deploying the Kit, continue to [Run the solution](#run-the-solution). If you decided to build the Kit locally, continue with [Install](#install) instead.
 
 ### Install
 
