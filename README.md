@@ -72,7 +72,7 @@ This Kit consists of two CDK stacks. You will deploy both in the same way, just 
     * Inference part: **TODO: URL HERE**
 4. Click **Next**.
 5. Enter the *Stack name*, for example, **RTB-Kit-Part1** or **RTB-Kit-Part2**. Keep the parameter **CDKQUALIFIER** with its default value.
-6. Clock **Next**.
+6. Click **Next**.
 7. Add tags if desired and click **Next**.
 8. Scroll down to the bottom, check **I acknowledge that AWS CloudFormation might create IAM resources** and click **Submit**.
 9. Wait until the stack is successfully deployed. There will be several additional stacks created.
@@ -247,9 +247,13 @@ At the end of this notebook we will save our XGBoost binary model in S3, which i
 
 The next step is to deploy the inference part of the Kit.
 
+If you have built the Kit locally, use the following command to deploy the inference part:
+
 ```bash
 cdk deploy "aik/filtering" --require-approval never
 ```
+
+Otherwise (if you preferred the Cloud-powered approach), refer to the [Cloud-powered deployment](#cloud-powered-deployment) section and follow the instructions to deploy the inference part.
 
 As you can see in the architecture diagram below, the inference is composed of one ECS cluster and one tasks and a CloudWatch dashboard.
 
@@ -369,11 +373,12 @@ Follow these instructions to remove the Kit from your Account.
     cdk destroy "aik/sagemaker-emr"
     ```
 
-5. If you deployed the Kit using the Cloud-powered approach, delete the CloudFormation stacks created.
+5. If you deployed the Kit using the Cloud-powered approach, delete the  Kit deployment CloudFormation stacks you created (**RTB-Kit-Part1** and **RTB-Kit-Part2**). This will also delete the Kit stacks as well. Finally, delete the CDK bootstrapping stack **CDKToolkit-rtbkit**.
     * Delete the stacks using AWS Management Console
     * Alternatively, use AWS CLI:
 
-    ```sh
-    aws cloud-formation delete-stack --stack-name RTB-Kit-Part1
-    aws cloud-formation delete-stack --stack-name RTB-Kit-Part2
-    ```
+        ```sh
+        aws cloudformation delete-stack --stack-name RTB-Kit-Part1
+        aws cloudformation delete-stack --stack-name RTB-Kit-Part2
+        aws cloudformation delete-stack --stack-name CDKToolkit-rtbkit
+        ```
