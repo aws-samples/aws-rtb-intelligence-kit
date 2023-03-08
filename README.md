@@ -85,19 +85,49 @@ After deploying the Kit, continue to [Run the solution](#run-the-solution). If y
 2. Run the following command, changing the `--stack-name` argument if desired:
     * ML part:
 
-    ```bash
-    aws cloudformation create-stack --template-url **TODO: URL HERE** \
-     --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit \
-     --capabilities CAPABILITY_IAM --stack-name RTB-Kit-MLDataPipeline
-    ```
+**Linux/MAC:**
 
-    * Inference part:
+```bash
+    ML_STACK="$(mktemp)" && curl -Ss  ***TODO: ML DATA PIPELINE URL HERE*** -o $ML_STACK
 
-    ```bash
-    aws cloudformation create-stack --template-url **TODO: URL HERE** \
-     --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit \
-     --capabilities CAPABILITY_IAM --stack-name RTB-Kit-Inference
-    ```
+    aws cloudformation create-stack --template-body file://$ML_STACK \
+        --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit \
+        --capabilities CAPABILITY_IAM --stack-name RTB-Kit-MLDataPipeline
+```
+
+**Windows:**
+
+
+```bash
+    set ML_STACK=%TMP%\aws-rtb-kit-ml.json && curl -Ss ***TODO: ML DATA PIPELINE URL HERE*** -o %ML_STACK%
+
+    aws cloudformation create-stack --template-body file://%ML_STACK%^
+        --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit^
+        --capabilities CAPABILITY_IAM --stack-name RTB-Kit-MLDataPipeline
+```
+
+* Inference part:
+
+
+**Linux/MAC:**
+
+```bash
+    INFERENCE_STACK="$(mktemp)" && curl -Ss ***TODO: INFERENCE URL HERE*** -o $INFERENCE_STACK
+
+    aws cloudformation create-stack --template-body file://$INFERENCE_STACK \
+        --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit \
+        --capabilities CAPABILITY_IAM --stack-name RTB-Kit-Inference
+```
+
+**Windows:**
+
+```bash
+    set INFERENCE_STACK=%TMP%\aws-rtb-kit-inference.json && curl -Ss  ***TODO: INFERENCE URL HERE*** -o %INFERENCE_STACK%
+
+    aws cloudformation create-stack --template-body file://%INFERENCE_STACK%^
+        --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit^
+        --capabilities CAPABILITY_IAM --stack-name RTB-Kit-Inference
+```
 
 After deploying the Kit, continue to [Run the solution](#run-the-solution). If you decided to build the Kit locally, continue with [Install](#install) instead.
 
