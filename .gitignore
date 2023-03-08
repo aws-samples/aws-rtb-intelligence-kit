@@ -73,3 +73,6 @@ Thumbs.db
 
 # For local development
 dev-deploy.sh
+
+# For VS Code
+.vscode
