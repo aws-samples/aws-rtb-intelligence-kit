@@ -68,8 +68,8 @@ This Kit consists of two CDK stacks. You will deploy both in the same way, just 
 1. Navigate to the CloudFormation console.
 2. Choose **Create stack** - **Template is ready** - **Upload a template file**.
 3. Download and choose one of the following files you want to deploy:
-    * ML part: [aws-rtb-kit-ml.json](https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-ml.json)
-    * Inference part: [aws-rtb-kit-inference.json](https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-inference.json)
+    * ML part, deploy this stack first: [aws-rtb-kit-ml.json](https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-ml.json)
+    * Inference part, only deploy this stack when requested in the [Run the inference](#run-the-inference) section: [aws-rtb-kit-inference.json](https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-inference.json)
 4. Click **Next**.
 5. Enter the *Stack name*, for example, **RTB-Kit-MLDataPipeline** or **RTB-Kit-Inference**. Keep the parameter **CDKQUALIFIER** with its default value.
 6. Click **Next**.
@@ -83,7 +83,7 @@ After deploying the Kit, continue to [Run the solution](#run-the-solution). If y
 
 1. Make sure your AWS CLI credentials are configured for your AWS Account and the target region.
 2. Run the following commands, changing the `--stack-name` argument if desired:
-    * ML part:
+    * ML part, deploy this stack first:
 
         **Linux/Mac:**
 
@@ -106,7 +106,7 @@ After deploying the Kit, continue to [Run the solution](#run-the-solution). If y
             --capabilities CAPABILITY_IAM --stack-name RTB-Kit-MLDataPipeline
         ```
 
-   * Inference part:
+    * Inference part, only deploy this stack when requested in the [Run the inference](#run-the-inference) section:
 
         **Linux/Mac:**
 
