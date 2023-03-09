@@ -66,10 +66,10 @@ This Kit consists of two CDK stacks. You will deploy both in the same way, just 
 #### Using AWS Management Console
 
 1. Navigate to the CloudFormation console.
-2. Choose **Create stack** - **Template is ready** - **Amazon S3 URL**.
-3. Enter the *Amazon S3 Url* of the stack you want to deploy:
-    * ML part: **TODO: URL HERE**
-    * Inference part: **TODO: URL HERE**
+2. Choose **Create stack** - **Template is ready** - **Upload a template file**.
+3. Download and choose one of the following files you want to deploy:
+    * ML part: [aws-rtb-kit-ml.json](https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-ml.json)
+    * Inference part: [aws-rtb-kit-inference.json](https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-inference.json)
 4. Click **Next**.
 5. Enter the *Stack name*, for example, **RTB-Kit-MLDataPipeline** or **RTB-Kit-Inference**. Keep the parameter **CDKQUALIFIER** with its default value.
 6. Click **Next**.
@@ -82,56 +82,58 @@ After deploying the Kit, continue to [Run the solution](#run-the-solution). If y
 #### Using AWS CLI
 
 1. Make sure your AWS CLI credentials are configured for your AWS Account and the target region.
-2. Run the following command, changing the `--stack-name` argument if desired:
+2. Run the following commands, changing the `--stack-name` argument if desired:
     * ML part:
 
-**Linux/MAC:**
+        **Linux/Mac:**
 
-```bash
-    ML_STACK="$(mktemp)" && curl -Ss  ***TODO: ML DATA PIPELINE URL HERE*** -o $ML_STACK
+        ```bash
+        ML_STACK="$(mktemp)" && \
+            curl -Ss https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-ml.json -o $ML_STACK
 
-    aws cloudformation create-stack --template-body file://$ML_STACK \
-        --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit \
-        --capabilities CAPABILITY_IAM --stack-name RTB-Kit-MLDataPipeline
-```
+        aws cloudformation create-stack --template-body file://$ML_STACK \
+            --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit \
+            --capabilities CAPABILITY_IAM --stack-name RTB-Kit-MLDataPipeline
+        ```
 
-**Windows:**
+        **Windows:**
 
+        ```batchfile
+        set ML_STACK=%TMP%\aws-rtb-kit-ml.json && curl -Ss https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-ml.json -o %ML_STACK%
 
-```bash
-    set ML_STACK=%TMP%\aws-rtb-kit-ml.json && curl -Ss ***TODO: ML DATA PIPELINE URL HERE*** -o %ML_STACK%
+        aws cloudformation create-stack --template-body file://%ML_STACK%^
+            --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit^
+            --capabilities CAPABILITY_IAM --stack-name RTB-Kit-MLDataPipeline
+        ```
 
-    aws cloudformation create-stack --template-body file://%ML_STACK%^
-        --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit^
-        --capabilities CAPABILITY_IAM --stack-name RTB-Kit-MLDataPipeline
-```
+   * Inference part:
 
-* Inference part:
+        **Linux/Mac:**
 
+        ```bash
+        INFERENCE_STACK="$(mktemp)" && \
+            curl -Ss https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-inference.json -o $INFERENCE_STACK
 
-**Linux/MAC:**
+        aws cloudformation create-stack --template-body file://$INFERENCE_STACK \
+            --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit \
+            --capabilities CAPABILITY_IAM --stack-name RTB-Kit-Inference
+        ```
 
-```bash
-    INFERENCE_STACK="$(mktemp)" && curl -Ss ***TODO: INFERENCE URL HERE*** -o $INFERENCE_STACK
+        **Windows:**
 
-    aws cloudformation create-stack --template-body file://$INFERENCE_STACK \
-        --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit \
-        --capabilities CAPABILITY_IAM --stack-name RTB-Kit-Inference
-```
+        ```batchfile
+        set INFERENCE_STACK=%TMP%\aws-rtb-kit-inference.json && curl -Ss https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-inference.json -o %INFERENCE_STACK%
 
-**Windows:**
+        aws cloudformation create-stack --template-body file://%INFERENCE_STACK%^
+            --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit^
+            --capabilities CAPABILITY_IAM --stack-name RTB-Kit-Inference
+        ```
 
-```bash
-    set INFERENCE_STACK=%TMP%\aws-rtb-kit-inference.json && curl -Ss  ***TODO: INFERENCE URL HERE*** -o %INFERENCE_STACK%
-
-    aws cloudformation create-stack --template-body file://%INFERENCE_STACK%^
-        --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit^
-        --capabilities CAPABILITY_IAM --stack-name RTB-Kit-Inference
-```
-
-After deploying the Kit, continue to [Run the solution](#run-the-solution). If you decided to build the Kit locally, continue with [Install](#install) instead.
+After deploying the Kit, continue with [Run the solution](#run-the-solution). If you decided to build the Kit locally, continue with [Install](#install) instead.
 
 ### Install
+
+The following steps describe how to build the Kit locally. If you have already started deploying the Kit using the Cloud-powered approach, skip this section and continue with [Run the solution](#run-the-solution).
 
 First, clone this repository into your development environment. We recommend AWS Cloud9 as a development environment, which contains all required dependencies listed above.
 
