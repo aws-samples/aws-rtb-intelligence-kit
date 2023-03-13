@@ -19,13 +19,18 @@ If you notice a defect, have questions, or need support with deployment, please 
 
 ## Prerequisites
 
-These are prerequisites to build and deploy this application:
+* No Amazon SageMaker Domain in your Account as the Kit installs a new domain. You can only have one domain per account and region.
+* [kaggle](https://www.kaggle.com/) a Kaggle account to download the example data set into the Kit
+
+If you want to build this solution on your local environment, you will need to install these prerequisites:
 
 * [Node.js](https://nodejs.org/en/) with version higher than 10.13.0 (Please note that version between 13.0.0 and 13.6.0 are not compatible too)
 * [CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html#getting_started_prerequisites) with version higher than 2.5.0
 * [Docker](https://docs.docker.com/get-docker/) version 20
-* No Amazon SageMaker Domain in your Account as the Kit installs a new domain. You can only have one domain per account and region.
-* [kaggle](https://www.kaggle.com/) a Kaggle account to download the example data set into the Kit
+
+Alternatively, you can build this solution in the AWS Cloud. For that, you will only need:
+
+* an AWS Account with a granted permission to deploy CloudFormation stacks.
 
 ## Architecture
 
@@ -51,7 +56,84 @@ The trained model is showcased in a traffic filtering use case where a bidding s
 
 ## Deployment
 
+### Cloud-powered deployment
+
+You can deploy this Kit into your Account leveraging such services as AWS CloudFormation and AWS CodeBuild without needing to install the dependencies locally.
+Please note that additional charges will apply, as this approach involves [bootstrapping a separate CDK environment](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html), running a [CodeBuild build](https://aws.amazon.com/codebuild/pricing/), and executing multiple AWS Lambda functions.
+
+This Kit consists of two CDK stacks. You will deploy both in the same way, just providing different stack URLs. After deploying the first part, continue with running the Kit. When you will need to deploy the **inference part** of the Kit, refer back to this deployment guide again.
+
+#### Using AWS Management Console
+
+1. Navigate to the CloudFormation console.
+2. Choose **Create stack** - **Template is ready** - **Upload a template file**.
+3. Download and choose one of the following files you want to deploy:
+    * ML part, deploy this stack first: [aws-rtb-kit-ml.json](https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-ml.json)
+    * Inference part, only deploy this stack when requested in the [Run the inference](#run-the-inference) section: [aws-rtb-kit-inference.json](https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-inference.json)
+4. Click **Next**.
+5. Enter the *Stack name*, for example, **RTB-Kit-MLDataPipeline** or **RTB-Kit-Inference**. Keep the parameter **CDKQUALIFIER** with its default value.
+6. Click **Next**.
+7. Add tags if desired and click **Next**.
+8. Scroll down to the bottom, check **I acknowledge that AWS CloudFormation might create IAM resources** and click **Submit**.
+9. Wait until the stack is successfully deployed. There will be several additional stacks created.
+
+After deploying the Kit, continue to [Run the solution](#run-the-solution). If you decided to build the Kit locally, continue with [Install](#install) instead.
+
+#### Using AWS CLI
+
+1. Make sure your AWS CLI credentials are configured for your AWS Account and the target region.
+2. Run the following commands, changing the `--stack-name` argument if desired:
+    * ML part, deploy this stack first:
+
+        **Linux/Mac:**
+
+        ```bash
+        ML_STACK="$(mktemp)" && \
+            curl -Ss https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-ml.json -o $ML_STACK
+
+        aws cloudformation create-stack --template-body file://$ML_STACK \
+            --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit \
+            --capabilities CAPABILITY_IAM --stack-name RTB-Kit-MLDataPipeline
+        ```
+
+        **Windows:**
+
+        ```batchfile
+        set ML_STACK=%TMP%\aws-rtb-kit-ml.json && curl -Ss https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-ml.json -o %ML_STACK%
+
+        aws cloudformation create-stack --template-body file://%ML_STACK%^
+            --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit^
+            --capabilities CAPABILITY_IAM --stack-name RTB-Kit-MLDataPipeline
+        ```
+
+    * Inference part, only deploy this stack when requested in the [Run the inference](#run-the-inference) section:
+
+        **Linux/Mac:**
+
+        ```bash
+        INFERENCE_STACK="$(mktemp)" && \
+            curl -Ss https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-inference.json -o $INFERENCE_STACK
+
+        aws cloudformation create-stack --template-body file://$INFERENCE_STACK \
+            --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit \
+            --capabilities CAPABILITY_IAM --stack-name RTB-Kit-Inference
+        ```
+
+        **Windows:**
+
+        ```batchfile
+        set INFERENCE_STACK=%TMP%\aws-rtb-kit-inference.json && curl -Ss https://artifacts.kits.eventoutfitters.aws.dev/industries/adtech/rtb/aws-rtb-kit-inference.json -o %INFERENCE_STACK%
+
+        aws cloudformation create-stack --template-body file://%INFERENCE_STACK%^
+            --parameters ParameterKey=CDKQUALIFIER,ParameterValue=rtbkit^
+            --capabilities CAPABILITY_IAM --stack-name RTB-Kit-Inference
+        ```
+
+After deploying the Kit, continue with [Run the solution](#run-the-solution). If you decided to build the Kit locally, continue with [Install](#install) instead.
+
 ### Install
+
+The following steps describe how to build the Kit locally. If you have already started deploying the Kit using the Cloud-powered approach, skip this section and continue with [Run the solution](#run-the-solution).
 
 First, clone this repository into your development environment. We recommend AWS Cloud9 as a development environment, which contains all required dependencies listed above.
 
@@ -197,9 +279,13 @@ At the end of this notebook we will save our XGBoost binary model in S3, which i
 
 The next step is to deploy the inference part of the Kit.
 
+If you have built the Kit locally, use the following command to deploy the inference part:
+
 ```bash
 cdk deploy "aik/filtering" --require-approval never
 ```
+
+Otherwise (if you preferred the Cloud-powered approach), refer to the [Cloud-powered deployment](#cloud-powered-deployment) section and follow the instructions to deploy the inference part.
 
 As you can see in the architecture diagram below, the inference is composed of one ECS cluster and one tasks and a CloudWatch dashboard.
 
@@ -312,9 +398,19 @@ Follow these instructions to remove the Kit from your Account.
     3. Delete the SageMaker Studio Domain
     4. Delete the Elastic File System created by SageMaker
 3. Delete parameters from Parameter store
-4. Run the following commands:
+4. If you deployed the Kit from your local environment, run the following commands:
 
-```sh
-cdk destroy "aik/filtering"
-cdk destroy "aik/sagemaker-emr"
-```
+    ```sh
+    cdk destroy "aik/filtering"
+    cdk destroy "aik/sagemaker-emr"
+    ```
+
+5. If you deployed the Kit using the Cloud-powered approach, delete the  Kit deployment CloudFormation stacks you created (**RTB-Kit-MLDataPipeline** and **RTB-Kit-Inference**). This will also delete the Kit stacks as well. Finally, delete the CDK bootstrapping stack **CDKToolkit-rtbkit**.
+    * Delete the stacks using AWS Management Console
+    * Alternatively, use AWS CLI:
+
+        ```sh
+        aws cloudformation delete-stack --stack-name RTB-Kit-MLDataPipeline
+        aws cloudformation delete-stack --stack-name RTB-Kit-Inference
+        aws cloudformation delete-stack --stack-name CDKToolkit-rtbkit
+        ```

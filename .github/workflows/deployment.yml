@@ -1,0 +1,39 @@
+name: Prepare Deployment
+
+on:
+  workflow_dispatch:
+    
+permissions:
+      id-token: write
+      contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+    - run: npm install -g cdk-standalone-deployer
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.DEPLOYMENT_ROLE }}
+        aws-region: ${{ secrets.DEPLOYMENT_BUCKET_REGION }}
+    - name: Generate ML deployment stack
+      run: |
+        cdk-standalone-deployer generate-link --github-repo-name ${{ github.repository }} \
+          --s3-bucket-name ${{ secrets.DEPLOYMENT_BUCKET }} --s3-bucket-region ${{ secrets.DEPLOYMENT_BUCKET_REGION }} --s3-key-prefix aws-rtb-kit-ml.json \
+          --stack-name "aik/sagemaker-emr" --install-command "npm install && npx tsc" --build-command "npm run build" \
+          --deploy-command "npx cdk deploy 'aik/sagemaker-emr' --require-approval never -c @aws-cdk/core:bootstrapQualifier=rtbkit" \
+          --destroy-command "npx cdk destroy 'aik/**' --force -c @aws-cdk/core:bootstrapQualifier=rtbkit" --cdk-qualifier rtbkit --enable-docker
+    - name: Generate inference deployment stack
+      run: |
+        cdk-standalone-deployer generate-link --github-repo-name ${{ github.repository }} \
+          --s3-bucket-name ${{ secrets.DEPLOYMENT_BUCKET }} --s3-bucket-region ${{ secrets.DEPLOYMENT_BUCKET_REGION }} --s3-key-prefix aws-rtb-kit-inference.json \
+          --stack-name "aik/filtering" --install-command "npm install && npx tsc" --build-command "npm run build" \
+          --deploy-command "npx cdk deploy 'aik/filtering' --require-approval never -c @aws-cdk/core:bootstrapQualifier=rtbkit" \
+          --destroy-command "npx cdk destroy 'aik/**' --force -c @aws-cdk/core:bootstrapQualifier=rtbkit" --cdk-qualifier rtbkit --enable-docker
