@@ -53,6 +53,7 @@ export class ProductConstruct extends Construct {
         const logBucket = new s3.Bucket(this, "access-logs", {
             encryption: s3.BucketEncryption.S3_MANAGED,
             autoDeleteObjects: true,
+            objectOwnership: s3.ObjectOwnership.BUCKET_OWNER_ENFORCED,
             removalPolicy: cdk.RemovalPolicy.DESTROY,
             blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
             enforceSSL: true,
@@ -420,7 +421,12 @@ export class ProductConstruct extends Construct {
             {
                 id: "AwsSolutions-IAM4",
                 reason: "CDK controls the policy, which is configured the way we need it to be"
-            }], true)
+            },
+            {
+                id: "AwsSolutions-L1",
+                reason: "This Lambda function is only using when destroying the stack"
+            },
+        ], true)
 
         // Grant the lambda permissions to describe and delete vpc, efs
         onEvent.addToRolePolicy(new iam.PolicyStatement({

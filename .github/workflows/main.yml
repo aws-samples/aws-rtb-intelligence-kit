@@ -18,10 +18,12 @@ jobs:
 
     - name: Install dependencies
       run: |
-        npm install -g aws-cdk@2.50.0
+        npm install -g aws-cdk@2.59.0
         npm install
         
     - name: Perform linting
+      env:
+        JSII_SILENCE_WARNING_DEPRECATED_NODE_VERSION: "true"
       run: |
         npm run build
         npm run nag
@@ -45,7 +47,7 @@ jobs:
     - name: Install dependencies
       run: |
         gem install cfn-nag
-        npm install -g aws-cdk@2.50.0
+        npm install -g aws-cdk@2.59.0
         npm install
     - name: Perform linting
       env:
