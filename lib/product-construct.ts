@@ -53,6 +53,7 @@ export class ProductConstruct extends Construct {
         const logBucket = new s3.Bucket(this, "access-logs", {
             encryption: s3.BucketEncryption.S3_MANAGED,
             autoDeleteObjects: true,
+            objectOwnership: s3.ObjectOwnership.BUCKET_OWNER_ENFORCED,
             removalPolicy: cdk.RemovalPolicy.DESTROY,
             blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
             enforceSSL: true,
