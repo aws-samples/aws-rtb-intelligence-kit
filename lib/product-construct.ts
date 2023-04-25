@@ -421,7 +421,12 @@ export class ProductConstruct extends Construct {
             {
                 id: "AwsSolutions-IAM4",
                 reason: "CDK controls the policy, which is configured the way we need it to be"
-            }], true)
+            },
+            {
+                id: "AwsSolutions-L1",
+                reason: "This Lambda function is only using when destroying the stack"
+            },
+        ], true)
 
         // Grant the lambda permissions to describe and delete vpc, efs
         onEvent.addToRolePolicy(new iam.PolicyStatement({
