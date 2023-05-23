@@ -20,7 +20,7 @@
     "@typescript-eslint/parser": "^5.35.1",
     "aws-cdk": "2.59.0",
     "aws-sdk": "^2.1204.0",
-    "cdk-nag": "^2.16.6",
+    "cdk-nag": "2.16.6",
     "constructs": "^10.1.90",
     "eslint": "^8.23.0",
     "jest": "^27.5.1",
