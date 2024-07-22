@@ -23,13 +23,13 @@ export function addIngress(scope: Construct,
     // Delete the ingress rules before the security groups so we don't get stuck
     function depend(ing: ec2.CfnSecurityGroupIngress) {
         if (toSecurityGroup instanceof ec2.CfnSecurityGroup) {
-            ing.addDependsOn(toSecurityGroup)
+            ing.addDependency(toSecurityGroup)
         }
         if (toSecurityGroup instanceof ec2.SecurityGroup) {
             ing.node.addDependency(toSecurityGroup)
         }
         if (fromSecurityGroup instanceof ec2.CfnSecurityGroup) {
-            ing.addDependsOn(fromSecurityGroup)
+            ing.addDependency(fromSecurityGroup)
         }
         if (fromSecurityGroup instanceof ec2.SecurityGroup) {
             ing.node.addDependency(fromSecurityGroup)

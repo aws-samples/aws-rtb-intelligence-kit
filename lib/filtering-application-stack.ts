@@ -225,7 +225,7 @@ export class FilteringApplicationStack extends cdk.Stack {
             maxHealthyPercent: 100,
             minHealthyPercent: 0,
             vpcSubnets: {
-                subnetType: ec2.SubnetType.PRIVATE_WITH_NAT
+                subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS
             },
             desiredCount: 1,
 
